@@ -4,7 +4,7 @@ PASSWORD=secret
 
 
 
-.PHONY: migrateup migratedown migrateup1 migratedown1
+.PHONY: migrateup migratedown migrateup1 migratedown1 start
 
 createdb:
 	docker exec -it ttcontainer createdb --username=$(USER) --owner=$(USER) timetracker
@@ -29,3 +29,6 @@ migratedown:
 
 migratedown1:
 	migrate -path ./migrations -database "${DB_SOURCE}" -verbose down 1
+
+start:
+	go run cmd/main.go

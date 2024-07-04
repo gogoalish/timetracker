@@ -1,4 +1,4 @@
-CREATE TABLE "tasks" (
+CREATE TABLE IF NOT EXISTS "tasks" (
   "id" serial PRIMARY KEY,
   "user_id" int NOT NULL,
   "description" varchar NOT NULL,
@@ -7,7 +7,7 @@ CREATE TABLE "tasks" (
   "created_at" timestamp NOT NULL
 );
 
-CREATE TABLE "people" (
+CREATE TABLE IF NOT EXISTS "people" (
   "id" serial PRIMARY KEY,
   "name" varchar NOT NULL,
   "surname" varchar NOT NULL,

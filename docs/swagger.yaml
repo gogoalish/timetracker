@@ -1,0 +1,400 @@
+definitions:
+  controller.createPersonReq:
+    properties:
+      passport_number:
+        type: integer
+      passport_serie:
+        type: integer
+    required:
+    - passport_number
+    - passport_serie
+    type: object
+  controller.createTaskReq:
+    properties:
+      description:
+        type: string
+      user_id:
+        minimum: 1
+        type: integer
+    required:
+    - description
+    - user_id
+    type: object
+  controller.deletePersonReq:
+    properties:
+      id:
+        minimum: 1
+        type: integer
+    required:
+    - id
+    type: object
+  controller.getOrderedTasksReq:
+    properties:
+      from_dt:
+        type: string
+      to_dt:
+        type: string
+      user_id:
+        minimum: 1
+        type: integer
+    required:
+    - from_dt
+    - to_dt
+    - user_id
+    type: object
+  controller.taskEndReq:
+    properties:
+      id:
+        minimum: 1
+        type: integer
+    required:
+    - id
+    type: object
+  controller.taskStartReq:
+    properties:
+      id:
+        minimum: 1
+        type: integer
+    required:
+    - id
+    type: object
+  controller.updatePersonReq:
+    properties:
+      address:
+        type: string
+      id:
+        minimum: 1
+        type: integer
+      name:
+        type: string
+      passport_number:
+        minimum: 1
+        type: integer
+      passport_serie:
+        minimum: 1
+        type: integer
+      patronymic:
+        type: string
+      surname:
+        type: string
+    required:
+    - id
+    type: object
+  service.Person:
+    properties:
+      address:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      passport_number:
+        type: integer
+      passport_serie:
+        type: integer
+      patronymic:
+        type: string
+      surname:
+        type: string
+    type: object
+  service.Task:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      end_dt:
+        type: string
+      hours:
+        type: integer
+      id:
+        type: integer
+      minutes:
+        type: integer
+      start_dt:
+        type: string
+      user_id:
+        type: integer
+    type: object
+info:
+  contact: {}
+paths:
+  /people/create:
+    post:
+      consumes:
+      - application/json
+      description: Create a new person with given passport details
+      parameters:
+      - description: Person details
+        in: body
+        name: person
+        required: true
+        schema:
+          $ref: '#/definitions/controller.createPersonReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Person ID
+          schema:
+            type: integer
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create a new person
+      tags:
+      - People
+  /people/delete:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a person by ID
+      parameters:
+      - description: Person ID
+        in: body
+        name: person
+        required: true
+        schema:
+          $ref: '#/definitions/controller.deletePersonReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete a person
+      tags:
+      - People
+  /people/list:
+    get:
+      consumes:
+      - application/json
+      description: List people with optional filters
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Page
+        in: query
+        name: page
+        type: integer
+      - description: Passport Serie
+        in: query
+        name: passport_serie
+        type: integer
+      - description: Passport Number
+        in: query
+        name: passport_number
+        type: integer
+      - description: Surname
+        in: query
+        name: surname
+        type: string
+      - description: Name
+        in: query
+        name: name
+        type: string
+      - description: Patronymic
+        in: query
+        name: patronymic
+        type: string
+      - description: Address
+        in: query
+        name: address
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of people
+          schema:
+            items:
+              $ref: '#/definitions/service.Person'
+            type: array
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: List people
+      tags:
+      - People
+  /people/update:
+    put:
+      consumes:
+      - application/json
+      description: Update a person's details
+      parameters:
+      - description: Person details
+        in: body
+        name: person
+        required: true
+        schema:
+          $ref: '#/definitions/controller.updatePersonReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update a person
+      tags:
+      - People
+  /tasks/create:
+    post:
+      consumes:
+      - application/json
+      description: Create a new task with a specific user ID and description
+      parameters:
+      - description: Task description and user ID
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/controller.createTaskReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Task ID
+          schema:
+            type: integer
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create a new task
+      tags:
+      - Tasks
+  /tasks/end:
+    post:
+      consumes:
+      - application/json
+      description: End a task by its ID
+      parameters:
+      - description: Task ID
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/controller.taskEndReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: End a task
+      tags:
+      - Tasks
+  /tasks/ordered:
+    get:
+      consumes:
+      - application/json
+      description: Get ordered tasks by user ID and date range
+      parameters:
+      - description: User ID and date range
+        in: body
+        name: tasks
+        required: true
+        schema:
+          $ref: '#/definitions/controller.getOrderedTasksReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of tasks
+          schema:
+            items:
+              $ref: '#/definitions/service.Task'
+            type: array
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get ordered tasks
+      tags:
+      - Tasks
+  /tasks/start:
+    put:
+      consumes:
+      - application/json
+      description: Start a task by its ID
+      parameters:
+      - description: Task ID
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/controller.taskStartReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Start a task
+      tags:
+      - Tasks
+swagger: "2.0"

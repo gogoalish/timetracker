@@ -6,15 +6,18 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"syscall"
 
 	"github.com/gogoalish/timetracker/config"
+	_ "github.com/gogoalish/timetracker/docs"
 	"github.com/gogoalish/timetracker/internal/clients"
 	"github.com/gogoalish/timetracker/internal/controller"
 	"github.com/gogoalish/timetracker/internal/logger"
 	"github.com/gogoalish/timetracker/internal/repo"
 	"github.com/gogoalish/timetracker/internal/server"
 	"github.com/gogoalish/timetracker/internal/service"
+	"github.com/gogoalish/timetracker/migrations"
 	_ "github.com/lib/pq"
 )
 
@@ -40,6 +43,16 @@ func main() {
 		l.Fatal(fmt.Sprint("error db conn ping: ", err))
 	}
 	defer db.Close()
+
+	migrationsPath, err := filepath.Abs("./migrations")
+	if err != nil {
+		l.Fatal(fmt.Sprint("error getting absolute path: ", err))
+	}
+
+	err = migrations.MigrateUp(cfg.DBURL, migrationsPath)
+	if err != nil {
+		l.Fatal(fmt.Sprint("error migrating: ", err))
+	}
 
 	peopleRepo := repo.NewPeopleRepo(db)
 	apiClient, err := clients.NewAPIService(cfg)

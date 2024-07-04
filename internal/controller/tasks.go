@@ -26,6 +26,17 @@ type createTaskReq struct {
 	UserID      int    `json:"user_id" binding:"required,min=1"`
 }
 
+// Create godoc
+// @Summary Create a new task
+// @Description Create a new task with a specific user ID and description
+// @Tags Tasks
+// @Accept  json
+// @Produce  json
+// @Param   task  body  createTaskReq  true  "Task description and user ID"
+// @Success 200 {integer} int "Task ID"
+// @Failure 400 {object} map[string]interface{} "Invalid request"
+// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Router /tasks/create [post]
 func (c *TasksController) Create(ctx *gin.Context) {
 	l, ok := logger.FromContext(ctx.Request.Context())
 	if !ok {
@@ -55,6 +66,17 @@ type taskStartReq struct {
 	ID int `json:"id" binding:"required,min=1"`
 }
 
+// Start godoc
+// @Summary Start a task
+// @Description Start a task by its ID
+// @Tags Tasks
+// @Accept  json
+// @Produce  json
+// @Param   task  body  taskStartReq  true  "Task ID"
+// @Success 200
+// @Failure 400 {object} map[string]interface{} "Invalid request"
+// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Router /tasks/start [put]
 func (c *TasksController) Start(ctx *gin.Context) {
 	l, ok := logger.FromContext(ctx.Request.Context())
 	if !ok {
@@ -90,6 +112,17 @@ type taskEndReq struct {
 	ID int `json:"id" binding:"required,min=1"`
 }
 
+// End godoc
+// @Summary End a task
+// @Description End a task by its ID
+// @Tags Tasks
+// @Accept  json
+// @Produce  json
+// @Param   task  body  taskEndReq  true  "Task ID"
+// @Success 200
+// @Failure 400 {object} map[string]interface{} "Invalid request"
+// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Router /tasks/end [post]
 func (c *TasksController) End(ctx *gin.Context) {
 	l, ok := logger.FromContext(ctx.Request.Context())
 	if !ok {
@@ -129,6 +162,17 @@ type getOrderedTasksReq struct {
 
 const dateLayout = "2006-01-02 15:04:05"
 
+// Ordered godoc
+// @Summary Get ordered tasks
+// @Description Get ordered tasks by user ID and date range
+// @Tags Tasks
+// @Accept  json
+// @Produce  json
+// @Param   tasks  body  getOrderedTasksReq  true  "User ID and date range"
+// @Success 200 {array} service.Task "List of tasks"
+// @Failure 400 {object} map[string]interface{} "Invalid request"
+// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Router /tasks/ordered [get]
 func (c *TasksController) Ordered(ctx *gin.Context) {
 	l, ok := logger.FromContext(ctx.Request.Context())
 	if !ok {

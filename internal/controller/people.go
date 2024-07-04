@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gogoalish/timetracker/internal/logger"
 	"github.com/gogoalish/timetracker/internal/service"
+
 	"go.uber.org/zap"
 )
 
@@ -28,6 +29,17 @@ type createPersonReq struct {
 
 var ErrNoLogger = errors.New("logger not found in context")
 
+// Create godoc
+// @Summary Create a new person
+// @Description Create a new person with given passport details
+// @Tags People
+// @Accept json
+// @Produce json
+// @Param person body createPersonReq true "Person details"
+// @Success 200 {integer} int "Person ID"
+// @Failure 400 {object} map[string]interface{} "Invalid request"
+// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Router /people/create [post]
 func (c *PeopleController) Create(ctx *gin.Context) {
 	l, ok := logger.FromContext(ctx.Request.Context())
 	if !ok {
@@ -69,6 +81,24 @@ type listPeopleReq struct {
 	Address        string `form:"address"`
 }
 
+// List godoc
+// @Summary List people
+// @Description List people with optional filters
+// @Tags People
+// @Accept json
+// @Produce json
+// @Param limit query int false "Limit"
+// @Param page query int false "Page"
+// @Param passport_serie query int false "Passport Serie"
+// @Param passport_number query int false "Passport Number"
+// @Param surname query string false "Surname"
+// @Param name query string false "Name"
+// @Param patronymic query string false "Patronymic"
+// @Param address query string false "Address"
+// @Success 200 {array} service.Person "List of people"
+// @Failure 400 {object} map[string]interface{} "Invalid request"
+// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Router /people/list [get]
 func (c *PeopleController) List(ctx *gin.Context) {
 	l, ok := logger.FromContext(ctx.Request.Context())
 	if !ok {
@@ -115,6 +145,17 @@ type updatePersonReq struct {
 	Address        string `json:"address"`
 }
 
+// Update godoc
+// @Summary Update a person
+// @Description Update a person's details
+// @Tags People
+// @Accept json
+// @Produce json
+// @Param person body updatePersonReq true "Person details"
+// @Success 200 "Success"
+// @Failure 400 {object} map[string]interface{} "Invalid request"
+// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Router /people/update [put]
 func (c *PeopleController) Update(ctx *gin.Context) {
 	l, ok := logger.FromContext(ctx.Request.Context())
 	if !ok {
@@ -158,6 +199,17 @@ type deletePersonReq struct {
 	ID int32 `json:"id" binding:"required,min=1"`
 }
 
+// Delete godoc
+// @Summary Delete a person
+// @Description Delete a person by ID
+// @Tags People
+// @Accept json
+// @Produce json
+// @Param person body deletePersonReq true "Person ID"
+// @Success 200 "Success"
+// @Failure 400 {object} map[string]interface{} "Invalid request"
+// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Router /people/delete [delete]
 func (c *PeopleController) Delete(ctx *gin.Context) {
 	l, ok := logger.FromContext(ctx.Request.Context())
 	if !ok {
